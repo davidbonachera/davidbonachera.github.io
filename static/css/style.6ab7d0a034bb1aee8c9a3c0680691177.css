@@ -204,7 +204,7 @@ a.symbol:before {
 .wrap {
 	top: 50%;
 	left: 50%;
-	width: 400px;
+	width: 600px;
 	height: 200px;
 	margin-left: -200px;
 	margin-top: -100px;
@@ -363,12 +363,11 @@ span.code { font-family:Menlo, Monaco, Courier; background-color:#EEE; font-size
 pre	{ 
 	font-family:Menlo, Monaco, Courier; 
 	white-space:pre-wrap; 
-	border: 1px solid #ddd; 
+	border: 0px solid #ddd; 
 	padding:20px; 
-	background-color:#9257FC; 
 	font-size:14px; 
 	overflow:auto; 
-	border-radius: 3px;
+	border-radius: 0px;
 }
 
 table {
