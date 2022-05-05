@@ -44,6 +44,7 @@ export default () => {
                 </div>
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
                     {nfts?.items.map((nft: any) => {
+                        if(nft.blockchain === 'POLYGON') return null;
                         return (
                             <a href={`https://opensea.io/assets/${nft.contract.split(":")[1]}/${nft.tokenId}`}
                                target={"_blank"} className={"m-3"}>
