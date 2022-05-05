@@ -1,12 +1,12 @@
 // @ts-ignore
 import favicon from '../assets/images/favicon.png';
 
-const title = 'David Bonachera | Software Engineer';
+const title = 'David Bonachera | Product Engineer';
 const description = 'TL;DR : Errands of my life, tech related.';
 
 export const helmet = {
     title,
-    titleTemplate: '%s - David Bonachera',
+    titleTemplate: '%s',
     htmlAttributes: { lang: 'en' },
     meta: [
         { name: 'description', content: description },
