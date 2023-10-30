@@ -22,7 +22,7 @@ const fetchNFTs = async (): Promise<any> => {
 };
 
 export default () => {
-    const [nfts, setNfts] = React.useState<any>([]);
+    const [nfts, setNfts] = React.useState<any>(null);
 
     return (
         <>
@@ -37,7 +37,7 @@ export default () => {
                     <div className="flex-grow border-t border-gray-200"></div>
                 </div>
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
-                    {nfts?.items.map((nft: any) => {
+                    {nfts && nfts.items.length > 0 && nfts?.items.map((nft: any) => {
                         if(nft.blockchain === 'POLYGON') return null;
                         return (
                             <a href={`https://opensea.io/assets/${nft.contract.split(":")[1]}/${nft.tokenId}`}
