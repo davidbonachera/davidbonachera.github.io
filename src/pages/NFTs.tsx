@@ -22,13 +22,7 @@ const fetchNFTs = async (): Promise<any> => {
 };
 
 export default () => {
-    const [nfts, setNfts] = React.useState<any>(null);
-
-    fetchNFTs().then(
-        (res) => {
-            setNfts(res)
-        }
-    )
+    const [nfts, setNfts] = React.useState<any>([]);
 
     return (
         <>

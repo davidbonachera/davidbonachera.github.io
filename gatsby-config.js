@@ -8,7 +8,7 @@ module.exports = gatsbyConfig
 
 module.exports = {
     siteMetadata: {
-        siteUrl: `https://www.yourdomain.tld`
+        siteUrl: `https://davidbonachera.fr`
     },
     plugins: ["gatsby-plugin-image", {
         resolve: 'gatsby-plugin-google-analytics',
