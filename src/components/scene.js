@@ -4,123 +4,133 @@ import TWEEN from '@tweenjs/tween.js';
 
 class Scene extends React.Component {
   componentDidMount() {
-    let container = this.mount;
-    let w = container.offsetWidth;
-    let h = container.offsetHeight;
+    this.initScene();
+    this.addLights();
+    this.addShapes();
+      this.addSphere();  // Adding the sphere
+    this.addTweens();
+    this.animate();
 
-    let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(15, w / h, 1, 1000);
-    camera.position.z = 20;
+    // Register visibility change listeners
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+  }
 
-    let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(container.innerWidth, container.innerHeight);
-    renderer.setClearColor(0x000000, 0);
+  componentWillUnmount() {
+    // Unregister visibility change listeners
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+  }
 
-    renderer.setSize(this.mount.offsetWidth, this.mount.offsetHeight);
-    this.mount.appendChild(renderer.domElement);
+  addSphere() {
+    const basicBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const edgesWhite = 0xffffff;
 
-    let hemiLight = new THREE.HemisphereLight('#FFFFFF', '#FFFFFF', 0.5);
+    this.sphereGroup = this.createShapeGroup(new THREE.SphereGeometry(1, 4, 6), basicBlack, edgesWhite, 1.1);
+  }
 
+  handleVisibilityChange = () => {
+    if (document.hidden) {
+      this.stopAnimations();
+    } else {
+      this.restartAnimations();
+    }
+  }
+
+  stopAnimations() {
+    // Stop all active tweens
+    TWEEN.removeAll();
+  }
+
+  restartAnimations() {
+    // Re-setup and start the animations from the beginning
+    this.addTweens();
+  }
+
+  initScene() {
+    const container = this.mount;
+    const w = container.offsetWidth;
+    const h = container.offsetHeight;
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(15, w / h, 1, 1000);
+    this.camera.position.z = 20;
+
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(w, h);
+    this.renderer.setClearColor(0x000000, 0);
+    container.appendChild(this.renderer.domElement);
+  }
+
+  addLights() {
+    const hemiLight = new THREE.HemisphereLight('#FFFFFF', '#FFFFFF', 0.5);
     hemiLight.position.set(0, 0, 10);
+    this.scene.add(hemiLight);
+  }
 
-    scene.add(hemiLight);
+  createShapeGroup(geometry, material, edgesColor, positionY) {
+    const group = new THREE.Group();
+    const mesh = new THREE.Mesh(geometry, material);
+    const edges = new THREE.EdgesGeometry(geometry);
+    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: edgesColor, lineWidth: 2 }));
 
-    // Create cone1
-    this.coneGroup = new THREE.Group();
-    let geometry = new THREE.ConeGeometry(2, 2.5, 4);
-    let material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-    let cone = new THREE.Mesh(geometry, material);
-    this.coneGroup.add(cone);
+    group.add(mesh, line);
+    group.position.y = positionY;
+    group.scale.set(0, 0, 0);
+    this.scene.add(group);
 
-    // Create cone1 edges
-    let edges = new THREE.EdgesGeometry(geometry);
-    let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, lineWidth: 2 }));
-    this.coneGroup.add(line);
-    this.coneGroup.position.y = 0.3;
-    this.coneGroup.scale.x = 0;
-    this.coneGroup.scale.y = 0;
-    this.coneGroup.scale.z = 0;
-    scene.add(this.coneGroup);
+    return group;
+  }
 
-    // Create cone2
-    this.cone1Group = new THREE.Group();
-    let geometryc1 = new THREE.ConeGeometry(1.5, 2, 3);
-    let materialc1 = new THREE.MeshBasicMaterial({ color: 0x000000 });
-    let cone1 = new THREE.Mesh(geometryc1, materialc1);
-    this.cone1Group.add(cone1);
-    // Create cone1 edges
-    let edgesc1 = new THREE.EdgesGeometry(geometryc1);
-    let linec1 = new THREE.LineSegments(edgesc1, new THREE.LineBasicMaterial({ color: 0xffffff, lineWidth: 2 }));
-    this.cone1Group.add(linec1);
-    this.cone1Group.position.y = -1;
-    this.cone1Group.scale.x = 0;
-    this.cone1Group.scale.y = 0;
-    this.cone1Group.scale.z = 0;
-    scene.add(this.cone1Group);
+  addShapes() {
+    const basicBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const edgesWhite = 0xffffff;
 
-    // Create one 2 Cube
-    this.cubeGroup2 = new THREE.Group();
-    let geometry2 = new THREE.BoxGeometry(2, 2, 2);
-    let material2 = new THREE.MeshToonMaterial({ color: 0x000000 });
-    let cube2 = new THREE.Mesh(geometry2, material2);
-    this.cubeGroup2.add(cube2);
-    let edges2 = new THREE.EdgesGeometry(geometry2);
-    let line2 = new THREE.LineSegments(edges2, new THREE.LineBasicMaterial({ color: 0xffffff, lineWidth: 2 }));
-    this.cubeGroup2.add(line2);
-    this.cubeGroup2.position.y = 1;
-    this.cubeGroup2.scale.x = 0;
-    this.cubeGroup2.scale.y = 0;
-    this.cubeGroup2.scale.z = 0;
-    scene.add(this.cubeGroup2);
+    this.coneGroup = this.createShapeGroup(new THREE.ConeGeometry(2, 2.5, 4), basicBlack, edgesWhite, 0.3);
+    this.cone1Group = this.createShapeGroup(new THREE.ConeGeometry(1.5, 2, 3), basicBlack, edgesWhite, -1);
+    this.cubeGroup2 = this.createShapeGroup(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshToonMaterial({ color: 0x000000 }), edgesWhite, 1);
+    this.cubeGroup3 = this.createShapeGroup(new THREE.BoxGeometry(1.1, 1.1, 1.1), new THREE.MeshToonMaterial({ color: 0x000000 }), edgesWhite, -1);
+    this.cubeGroup4 = this.createShapeGroup(new THREE.BoxGeometry(0.9, 0.9, 0.9), new THREE.MeshToonMaterial({ color: 0x000000 }), edgesWhite, -1.1);
+    this.cone3 = this.createShapeGroup(new THREE.ConeGeometry(2, 3, 3), basicBlack, edgesWhite, 0.8);
+  }
 
-    // Create one 2 Cube
-    this.cubeGroup3 = new THREE.Group();
-    let geometry3 = new THREE.BoxGeometry(1.1, 1.1, 1.1);
-    let material3 = new THREE.MeshToonMaterial({ color: 0x000000 });
-    let cube3 = new THREE.Mesh(geometry3, material3);
-    this.cubeGroup3.add(cube3);
-    let edges3 = new THREE.EdgesGeometry(geometry3);
-    let line3 = new THREE.LineSegments(edges3, new THREE.LineBasicMaterial({ color: 0xffffff, lineWidth: 2 }));
-    this.cubeGroup3.add(line3);
-    this.cubeGroup3.position.y = -1;
-    this.cubeGroup3.scale.x = 0;
-    this.cubeGroup3.scale.y = 0;
-    this.cubeGroup3.scale.z = 0;
-    scene.add(this.cubeGroup3);
+  createTween(group, delay) {
+    const moveRightAndGrow = new TWEEN.Tween({ x: -10, scale: 0 })
+        .to({ x: 0, scale: 1 }, 4000)
+        .easing(TWEEN.Easing.Sinusoidal.In)
+        .onUpdate(({ x, scale }) => {
+          group.position.x = x;
+          group.scale.set(scale, scale, scale);
+        })
+        .onComplete(() => moveRightAndVanish.start());
 
-    this.cubeGroup4 = new THREE.Group();
-    let geometry4 = new THREE.BoxGeometry(0.9, 0.9, 0.9);
-    let material4 = new THREE.MeshToonMaterial({ color: 0x000000 });
-    let cube4 = new THREE.Mesh(geometry4, material4);
-    this.cubeGroup4.add(cube4);
-    let edges4 = new THREE.EdgesGeometry(geometry4);
-    let line4 = new THREE.LineSegments(edges4, new THREE.LineBasicMaterial({ color: 0xffffff, lineWidth: 2 }));
-    this.cubeGroup4.add(line4);
-    this.cubeGroup4.position.y = -1.1;
-    this.cubeGroup4.scale.x = 0;
-    this.cubeGroup4.scale.y = 0;
-    this.cubeGroup4.scale.z = 0;
-    scene.add(this.cubeGroup4);
+    const moveRightAndVanish = new TWEEN.Tween({ x: 0, scale: 1 })
+        .to({ x: 10, scale: 0 }, 4000)
+        .easing(TWEEN.Easing.Sinusoidal.Out)
+        .onUpdate(({ x, scale }) => {
+          group.position.x = x;
+          group.scale.set(scale, scale, scale);
+        })
+        .onComplete(() => moveRightAndGrow.start());
 
-    // Create cone2
-    this.cone3 = new THREE.Group();
-    let geometryc3 = new THREE.ConeGeometry(2, 3, 3);
-    let materialc3 = new THREE.MeshBasicMaterial({ color: 0x000000 });
-    let cone3 = new THREE.Mesh(geometryc3, materialc3);
-    this.cone3.add(cone3);
-    // Create cone1 edges
-    let edgesc3 = new THREE.EdgesGeometry(geometryc3);
-    let linec3 = new THREE.LineSegments(edgesc3, new THREE.LineBasicMaterial({ color: 0xffffff, lineWidth: 2 }));
-    this.cone3.add(linec3);
-    this.cone3.position.y = 0.8;
-    this.cone3.scale.x = 0;
-    this.cone3.scale.y = 0;
-    this.cone3.scale.z = 0;
-    scene.add(this.cone3);
+    setTimeout(() => moveRightAndGrow.start(), delay);
+  }
 
-    let animate = () => {
-      requestAnimationFrame(animate);
+  addTweens() {
+    this.createTween(this.coneGroup, 1500);
+    this.createTween(this.cubeGroup2, 0);
+    this.createTween(this.cubeGroup4, 4500);
+    this.createTween(this.cone3, 2500);
+    this.createTween(this.sphereGroup, 3500);
+    this.createTween(this.cone1Group, 2000);
+    this.createTween(this.cubeGroup3, 2800);
+  }
+
+  animate() {
+    const animateScene = () => {
+      requestAnimationFrame(animateScene);
+      // Update rotations for each shape group
+      // ... (similar to the provided code)
+
       this.coneGroup.rotation.x += .01;
       this.coneGroup.rotation.y += .01;
       this.coneGroup.rotation.z += .02;
@@ -145,219 +155,20 @@ class Scene extends React.Component {
       this.cone3.rotation.y += .021;
       this.cone3.rotation.z -= .014;
 
-      TWEEN.update();
 
-      renderer.render(scene, camera);
+      this.sphereGroup.rotation.x += .01;
+      this.sphereGroup.rotation.y += .02;
+      this.sphereGroup.rotation.z += .02;
+
+      TWEEN.update();
+      this.renderer.render(this.scene, this.camera);
     };
 
-    setTimeout(() => {
-      this.buildUp =
-        new TWEEN.Tween({
-          x: -10,
-          scale: 0,
-        }).to({
-          x: 0,
-          scale: 1,
-        }, 4000).easing(TWEEN.Easing.Sinusoidal.In).onUpdate(({ x, scale }) => {
-          this.coneGroup.scale.x = scale;
-          this.coneGroup.scale.y = scale;
-          this.coneGroup.scale.z = scale;
-          this.coneGroup.position.x = x;
-        }).onComplete(() => {
-          //Loop it forever
-          this.buildDown.start();
-        }).start();
-    },1500);
-
-    this.buildDown =
-      new TWEEN.Tween({
-        x: 0,
-        scale: 1,
-      }).to({
-        x: 10,
-        scale: 0,
-      }, 4000).easing(TWEEN.Easing.Sinusoidal.Out).onUpdate(({ x, scale }) => {
-        this.coneGroup.scale.x = scale;
-        this.coneGroup.scale.y = scale;
-        this.coneGroup.scale.z = scale;
-        this.coneGroup.position.x = x;
-      }).onComplete(() => {
-        //Loop it forever
-        this.buildUp.start();
-      });
-
-    // First Tween
-    setTimeout(() => {
-      this.moveRightAndGrow = new TWEEN.Tween({
-        x: -10,
-        scale: 0,
-      }).to({
-        x: 0,
-        scale: 0.9,
-      }, 4000).easing(TWEEN.Easing.Sinusoidal.In).onUpdate(({ x, scale }) => {
-        this.cubeGroup2.position.x = x;
-        this.cubeGroup2.scale.x = scale;
-        this.cubeGroup2.scale.y = scale;
-        this.cubeGroup2.scale.z = scale;
-      }).onComplete(() => {
-        this.moveRightAndVanish.start();
-      }).start();
-    }, 0);
-
-    this.moveRightAndVanish = new TWEEN.Tween({
-      x: 0,
-      scale: 0.9,
-    }).to({
-      x: 10,
-      scale: 0,
-    }, 4000).easing(TWEEN.Easing.Sinusoidal.Out).onUpdate(({ x, scale }) => {
-      this.cubeGroup2.position.x = x;
-      this.cubeGroup2.scale.x = scale;
-      this.cubeGroup2.scale.y = scale;
-      this.cubeGroup2.scale.z = scale;
-    }).onComplete(() => {
-      this.moveRightAndGrow.start();
-    });
-
-    // Second tween
-    setTimeout(() => {
-      this.moveRightAndGrow4 = new TWEEN.Tween({
-        x: -10,
-        scale: 0,
-      }).to({
-        x: 0,
-        scale: 1,
-      }, 4000).easing(TWEEN.Easing.Sinusoidal.In).onUpdate(({ x, scale }) => {
-        this.cubeGroup4.position.x = x;
-        this.cubeGroup4.scale.x = scale;
-        this.cubeGroup4.scale.y = scale;
-        this.cubeGroup4.scale.z = scale;
-      }).onComplete(() => {
-        this.moveRightAndVanish4.start();
-      }).start();
-    }, 4500);
-
-    this.moveRightAndVanish4 = new TWEEN.Tween({
-      x: 0,
-      scale: 1,
-    }).to({
-      x: 10,
-      scale: 0,
-    }, 4000).easing(TWEEN.Easing.Sinusoidal.Out).onUpdate(({ x, scale }) => {
-      this.cubeGroup4.position.x = x;
-      this.cubeGroup4.scale.x = scale;
-      this.cubeGroup4.scale.y = scale;
-      this.cubeGroup4.scale.z = scale;
-    }).onComplete(() => {
-      this.moveRightAndGrow4.start();
-    });
-
-    // 2.5 tween
-    setTimeout(() => {
-      this.moveRightAndGrow5 = new TWEEN.Tween({
-        x: -10,
-        scale: 0,
-      }).to({
-        x: 0,
-        scale: 0.9,
-      }, 4000).easing(TWEEN.Easing.Sinusoidal.In).onUpdate(({ x, scale }) => {
-        this.cone3.position.x = x;
-        this.cone3.scale.x = scale;
-        this.cone3.scale.y = scale;
-        this.cone3.scale.z = scale;
-      }).onComplete(() => {
-        this.moveRightAndVanish5.start();
-      }).start();
-    }, 2500);
-
-    this.moveRightAndVanish5 = new TWEEN.Tween({
-      x: 0,
-      scale: 0.9,
-    }).to({
-      x: 10,
-      scale: 0,
-    }, 4000).easing(TWEEN.Easing.Sinusoidal.Out).onUpdate(({ x, scale }) => {
-      this.cone3.position.x = x;
-      this.cone3.scale.x = scale;
-      this.cone3.scale.y = scale;
-      this.cone3.scale.z = scale;
-    }).onComplete(() => {
-      this.moveRightAndGrow5.start();
-    });
-
-    // 3rd Tween
-    setTimeout(() => {
-      this.moveRightAndGrow2 = new TWEEN.Tween({
-        x: -10,
-        scale: 0,
-      }).to({
-        x: 0,
-        scale: 1,
-      }, 4000).easing(TWEEN.Easing.Sinusoidal.In).onUpdate(({ x, scale }) => {
-        this.cone1Group.position.x = x;
-        this.cone1Group.scale.x = scale;
-        this.cone1Group.scale.y = scale;
-        this.cone1Group.scale.z = scale;
-      }).onComplete(() => {
-        this.moveRightAndVanish2.start();
-      }).start();
-    }, 2000);
-
-    this.moveRightAndVanish2 = new TWEEN.Tween({
-      x: 0,
-      scale: 1,
-    }).to({
-      x: 10,
-      scale: 0,
-    }, 4000).easing(TWEEN.Easing.Sinusoidal.Out).onUpdate(({ x, scale }) => {
-      this.cone1Group.position.x = x;
-      this.cone1Group.scale.x = scale;
-      this.cone1Group.scale.y = scale;
-      this.cone1Group.scale.z = scale;
-    }).onComplete(() => {
-      this.moveRightAndGrow2.start();
-    });
-
-    // 4th tween
-    setTimeout(() => {
-      this.moveRightAndGrow3 = new TWEEN.Tween({
-        x: -10,
-        scale: 0,
-      }).to({
-        x: 0,
-        scale: 1,
-      }, 4000).easing(TWEEN.Easing.Sinusoidal.In).onUpdate(({ x, scale }) => {
-        this.cubeGroup3.position.x = x;
-        this.cubeGroup3.scale.x = scale;
-        this.cubeGroup3.scale.y = scale;
-        this.cubeGroup3.scale.z = scale;
-      }).onComplete(() => {
-        this.moveRightAndVanish3.start();
-      }).start();
-    }, 2800);
-
-    this.moveRightAndVanish3 = new TWEEN.Tween({
-      x: 0,
-      scale: 1,
-    }).to({
-      x: 10,
-      scale: 0,
-    }, 4000).easing(TWEEN.Easing.Sinusoidal.Out).onUpdate(({ x, scale }) => {
-      this.cubeGroup3.position.x = x;
-      this.cubeGroup3.scale.x = scale;
-      this.cubeGroup3.scale.y = scale;
-      this.cubeGroup3.scale.z = scale;
-    }).onComplete(() => {
-      this.moveRightAndGrow3.start();
-    });
-
-    animate();
+    animateScene();
   }
 
   render() {
-    return (
-      <div ref={ref => (this.mount = ref)} style={{ width: `200px`, height: `50px` }}></div>
-    );
+    return <div ref={ref => (this.mount = ref)} style={{ width: `200px`, height: `50px` }}></div>;
   }
 }
 

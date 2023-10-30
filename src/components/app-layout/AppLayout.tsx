@@ -27,7 +27,7 @@ export default ({children}: AppLayoutProps) => {
                 <link rel="stylesheet" href="https://rsms.me/inter/inter.css"/>
             </Helmet>
 
-            <div className={"flex flex-col h-screen justify-between"}>
+            <div className={"flex flex-col h-screen justify-between mx-auto max-w-2xl lg:max-w-5xl"}>
                 <Header/>
 
                 <div className="mb-auto">
