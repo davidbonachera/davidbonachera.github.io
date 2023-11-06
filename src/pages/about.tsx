@@ -18,11 +18,11 @@ export default () => {
                     <h2 className={"text-xl font-light tracking-wide"}>
                         With a mixed background made of computer science and design, I'm crafting products for the Internet.
                         <br/> <br/>
-                        I work as a Software Engineer at Lazada, business unit of Alibaba Group based in
-                        Shenzhen,
-                        China.
+                        I work as a Software Engineer at Miravia, business unit of Alibaba Group based in
+                        Barcelona,
+                        Spain.
                         <br/> <br/>
-                        Previously, I did some entrepreneurial projects where I practice user-centered product design and
+                        Previously, I did some entrepreneurial projects, in China, where I practice user-centered product design and
                         also
                         co-founded a logistics startup.
                     </h2>
