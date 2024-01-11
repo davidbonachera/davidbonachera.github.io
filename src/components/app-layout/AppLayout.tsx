@@ -23,10 +23,6 @@ export default ({children}: AppLayoutProps) => {
 
     return (
         <>
-            <Helmet {...helmet}>
-                <link rel="stylesheet" href="https://rsms.me/inter/inter.css"/>
-            </Helmet>
-
             <div className={"flex flex-col h-screen justify-between mx-auto max-w-2xl lg:max-w-5xl"}>
                 <Header/>
 
@@ -35,14 +31,11 @@ export default ({children}: AppLayoutProps) => {
                 </div>
 
                 <Footer
-                    logo={<Logo/>}
                     social={[
-                        {icon: <Dribbble/>, to: 'https://dribbble.com/davidbonachera'},
-                        {icon: <Twitter/>, to: 'https://twitter.com/CarreTriangle'},
-                        {icon: <Github/>, to: 'https://github.com/davidbonachera'},
-                        {icon: <Stackoverflow/>, to: 'https://stackoverflow.com/users/3737990/davidbonachera'},
-                        {icon: <Instagram/>, to: 'https://www.instagram.com/carretriangle/'},
-                        {icon: <Linkedin/>, to: 'https://www.linkedin.com/in/davidbonachera/'},
+                        {title: "twitter", to: 'https://twitter.com/CarreTriangle'},
+                        {title: "github", to: 'https://github.com/davidbonachera\''},
+                        {title: "linkedin", to: 'https://www.linkedin.com/in/davidbonachera'},
+                        {title: "stackoverflow", to: 'https://stackoverflow.com/users/3737990/davidbonachera'},
                     ]}
                 />
             </div>

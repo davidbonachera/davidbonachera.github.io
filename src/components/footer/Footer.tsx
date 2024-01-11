@@ -3,12 +3,13 @@ import React, {ReactNode} from 'react';
 import Container from '../container/Container';
 
 interface Social {
-    icon: ReactNode;
+    icon?: ReactNode;
     to: string;
+    title: string;
 }
 
 interface FooterProps {
-    logo: ReactNode;
+    logo?: ReactNode;
     social: Social[];
 }
 
@@ -17,14 +18,14 @@ export const Footer = ({logo, social}: FooterProps) => {
         <Container>
             <div className={"footer flex flex-row justify-between"}>
                 <a href="http://davidbonachera.fr" target="_blank" rel="noopener noreferrer">
-                    {logo}
+                    © {new Date().getFullYear()}
                 </a>
 
                 <ul className={"inline-flex"}>
                     {social.map((item) => (
                         <li key={item.to} className={"px-2"}>
                             <a href={item.to} target="_blank" rel="noopener noreferrer">
-                                {item.icon}
+                                {item.title}
                             </a>
                         </li>
                     ))}

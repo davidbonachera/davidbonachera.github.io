@@ -1,5 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
-
+/** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: 'class',
     content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
@@ -12,6 +12,7 @@ module.exports = {
     },
     variants: {},
     plugins: [
-        require('flowbite/plugin')
+        require('flowbite/plugin'),
+        require('@tailwindcss/typography'),
     ]
 }

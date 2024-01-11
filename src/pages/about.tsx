@@ -3,6 +3,7 @@ import React from 'react';
 // @ts-ignore
 import photo from '../assets/images/davidbonachera.jpeg';
 import Container from "../components/container/Container";
+import Seo from "../components/seo";
 
 // tslint:disable no-default-export
 export default () => {
@@ -31,3 +32,8 @@ export default () => {
         </>
     );
 };
+export const Head = () => {
+    return (
+        <Seo title="Bio" description="Read about me here."/>
+    )
+}

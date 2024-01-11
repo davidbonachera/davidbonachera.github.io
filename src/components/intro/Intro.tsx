@@ -5,7 +5,7 @@ import Highlight from "./Highlight";
 
 const Intro = () => (
     <Container>
-        <div className={"px-16 py-32 max-w-4xl"}>
+        <div className={"py-32 max-w-4xl"}>
             <h1 className={"text-3xl font-light"}>👋 I'm David, product engineer with a design mindset.</h1>
             <p className={"mt-4 text-2xl font-light text-gray-500"}>
                 Creative, curious & meticulous, I like to craft useful products. <br/>

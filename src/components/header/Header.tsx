@@ -36,8 +36,7 @@ export const Header = () => (
                     <div className="hidden w-full md:block md:w-auto" id="mobile-menu">
                         <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
                             <HeaderLink name="about" to="/about"/>
-                            <HeaderLink name="investments" to="/investments"/>
-                            <HeaderLink name="NFTs" to="/NFTs"/>
+                            <HeaderLink name="read" to="/read"/>
                             {/*<HeaderLink name="github" to="https://github.com/davidbonachera" icon={<Github/>}/>*/}
 
                             <div className="">
