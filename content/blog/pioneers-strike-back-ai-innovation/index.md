@@ -1,5 +1,5 @@
 ---
-title: "Pioneers strike back: AI innovation"
+title: "Thought #1: Pioneers strike back: AI innovation"
 date: "2023-12-19T18:46:37.121Z"
 description: ""
 ---
@@ -43,7 +43,17 @@ Iteration of new LLM will just be like a new version of the google algorithm, so
 
 In another word, the thigns we call AI right now is just a complex search and prediction engine. It is not possible to accuractly generate knowledge base through AI at the moment [^4]. If we do it at scale, it will lead to an information degradation and overtime be less and less useful. Thats why the value of ChatGPT is within the LLM they use and how they pretrained with Reinforcement Learning with human feedback.
 
-Overall, the need of knowledge and content become more and more important, quality is the key, AI can’t supersede our knowledge at the moment, it will be bound to his software and dictionary limit the same way google is limited to the world wide web, expansion to a new domain will require new breakthrgouh to get knowledge, like biological integration of AI.
+Overall, the need of knowledge and content become more and more important, quality is the key, AI can’t supersede our knowledge at the moment. It will be bound to his software and dictionary limit the same way google is limited to the world wide web.
+
+Lately the copyright infrigment lawsuit skyrocketed, and the outcomes of it could possibly mean the creation of a new business model, where content will be licensed and valued through the use of AI. Each time an LLM will access a copyrighted content, it will have to pay a fee. The same way we access music through subscription, knowledged will be billable. And that would be a good news.
+
+OpenAI is already ready for that.
+
+![img_1.png](img_1.png)
+Last GPT answer to create a Basquiat style picture
+
+
+expansion to a new domain will require new breakthrgouh to get knowledge, like biological integration of AI.
 
 To rewrite:
 This is the limit of our transformers (https://www.ft.com/content/37bb01af-ee46-4483-982f-ef3921436a50)
